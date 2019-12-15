@@ -159,60 +159,103 @@ class NyaaItem extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          ListTile(
-            trailing: Icon(Icons.file_download),
-            title: Text(this.title),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.fromLTRB(2, 6, 0, 0),
-                  child: Wrap(
-                    spacing: 6,
-                    children: <Widget>[
-                      Image.network('https://nyaa.si/static/img/icons/nyaa/1_2.png', height: 15),
-                      Text('|'),
-                      Text(this.size, style: TextStyle(fontWeight: FontWeight.bold)),
-                      Text('|'),
-                      Text(this.date, style: TextStyle(fontWeight: FontWeight.bold))
-                    ],
+      child: Container(
+        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(this.title, style: TextStyle(fontSize: 17)),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(2, 6, 0, 0),
+                    child: Wrap(
+                      spacing: 6,
+                      children: <Widget>[
+                        Image.network('https://nyaa.si/static/img/icons/nyaa/1_2.png', height: 15),
+                        Text('|'),
+                        Text(this.size, style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text('|'),
+                        Text(this.date, style: TextStyle(fontWeight: FontWeight.bold))
+                      ],
+                    ),
                   ),
+                  Wrap(
+                    spacing: 5,
+                    children: <Widget>[
+                      if (this.comments > 0) NyaaItemStat(
+                        icon: Icons.comment,
+                        text: this.comments.toString(),
+                        spacing: 2,
+                      ),
+                      NyaaItemStat(
+                        icon: Icons.file_upload,
+                        color: Colors.green,
+                        text: this.seeders.toString()
+                      ),
+                      NyaaItemStat(
+                        icon: Icons.file_download,
+                        color: Colors.red,
+                        text: this.leechers.toString()
+                      ),
+                      NyaaItemStat(
+                        icon: Icons.offline_pin,
+                        text: this.downloaded.toString(),
+                        spacing: 2,
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                ButtonTheme(
+                  minWidth: 40,
+                  shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(20.0) ),
+                  child: FlatButton(
+                    color: Colors.blue,
+                    textColor: Colors.white,
+                    disabledColor: Colors.grey,
+                    disabledTextColor: Colors.black,
+                    padding: EdgeInsets.all(8.0),
+                    shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(20.0) ),
+                    splashColor: Colors.blueAccent,
+                    onPressed: () {
+                      /*...*/
+                      print('download torrent');
+                    },
+                    child: Icon(Icons.file_download),
+                  )
                 ),
-                Wrap(
-                  spacing: 5,
-                  children: <Widget>[
-                    if (this.comments > 0) NyaaItemStat(
-                      icon: Icons.comment,
-                      text: this.comments.toString(),
-                      spacing: 2,
-                    ),
-                    NyaaItemStat(
-                      icon: Icons.file_upload,
-                      color: Colors.green,
-                      text: this.seeders.toString()
-                    ),
-                    NyaaItemStat(
-                      icon: Icons.file_download,
-                      color: Colors.red,
-                      text: this.leechers.toString()
-                    ),
-                    NyaaItemStat(
-                      icon: Icons.offline_pin,
-                      text: this.downloaded.toString(),
-                      spacing: 2,
-                    ),
-                  ],
+                ButtonTheme(
+                  minWidth: 40,
+                  shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(20.0) ),
+                  child: FlatButton(
+                    color: Colors.green,
+                    textColor: Colors.white,
+                    disabledColor: Colors.grey,
+                    disabledTextColor: Colors.black,
+                    padding: EdgeInsets.all(8.0),
+                    shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(20.0) ),
+                    splashColor: Colors.greenAccent,
+                    onPressed: () {
+                      /*...*/
+                      print('copy magnet link');
+                    },
+                    child: Icon(Icons.attachment),
+                  )
                 )
               ],
             )
-          ),
-        ],
-      ),
+          ],
+        )
+      )
     );
   }
 
