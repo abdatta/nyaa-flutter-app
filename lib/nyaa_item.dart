@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 class NyaaItem extends StatelessWidget{
-  final category = 'Anime Subs';
-  final title = '[YakuboEncodes] Detective Conan - 963 [1080p][10 bit][x265 HEVC][Opus][HorribleSubs].mkv';
-  final size = '1.4 GiB';
-  final date = '2019-12-14 18:10';
-  final comments = 2;
-  final seeders = 11;
-  final leechers = 5;
-  final downloaded = 61;
+  final category;
+  final title;
+  final size;
+  final date;
+  final comments;
+  final seeders;
+  final leechers;
+  final downloaded;
+
+  NyaaItem({Key key, this.category, this.title, this.size, this.date, this.comments, this.seeders, this.leechers, this.downloaded}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class NyaaItem extends StatelessWidget{
                     child: Wrap(
                       spacing: 6,
                       children: <Widget>[
-                        Image.network('https://nyaa.si/static/img/icons/nyaa/1_2.png', height: 15),
+                        Image.network('https://nyaa.si/static/img/icons/nyaa/' + this.category + '.png', height: 15),
                         Text('|'),
                         Text(this.size, style: TextStyle(fontWeight: FontWeight.bold)),
                         Text('|'),

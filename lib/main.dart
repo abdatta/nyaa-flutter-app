@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nyaa_app/nyaa_drawer.dart';
-import 'package:nyaa_app/nyaa_item.dart';
+import 'package:nyaa_app/nyaa_items_list.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Nyaa App',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            NyaaItem(),
+            NyaaItemsList(),
             Text(
               'You have pushed the button this many times:',
             ),
