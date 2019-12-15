@@ -89,8 +89,9 @@ class _MyHomePageState extends State<MyHomePage> {
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
+            NyaaItem(),
             Text(
               'You have pushed the button this many times:',
             ),
@@ -141,6 +142,102 @@ class NyaaDrawer extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+}
+
+class NyaaItem extends StatelessWidget{
+  final category = 'Anime Subs';
+  final title = '[YakuboEncodes] Detective Conan - 963 [1080p][10 bit][x265 HEVC][Opus][HorribleSubs].mkv';
+  final size = '1.4 GiB';
+  final date = '2019-12-14 18:10';
+  final comments = 2;
+  final seeders = 11;
+  final leechers = 5;
+  final downloaded = 61;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          ListTile(
+            trailing: Icon(Icons.file_download),
+            title: Text(this.title),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.fromLTRB(2, 6, 0, 0),
+                  child: Wrap(
+                    spacing: 6,
+                    children: <Widget>[
+                      Image.network('https://nyaa.si/static/img/icons/nyaa/1_2.png', height: 15),
+                      Text('|'),
+                      Text(this.size, style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text('|'),
+                      Text(this.date, style: TextStyle(fontWeight: FontWeight.bold))
+                    ],
+                  ),
+                ),
+                Wrap(
+                  spacing: 5,
+                  children: <Widget>[
+                    if (this.comments > 0) NyaaItemStat(
+                      icon: Icons.comment,
+                      text: this.comments.toString(),
+                      spacing: 2,
+                    ),
+                    NyaaItemStat(
+                      icon: Icons.file_upload,
+                      color: Colors.green,
+                      text: this.seeders.toString()
+                    ),
+                    NyaaItemStat(
+                      icon: Icons.file_download,
+                      color: Colors.red,
+                      text: this.leechers.toString()
+                    ),
+                    NyaaItemStat(
+                      icon: Icons.offline_pin,
+                      text: this.downloaded.toString(),
+                      spacing: 2,
+                    ),
+                  ],
+                )
+              ],
+            )
+          ),
+        ],
+      ),
+    );
+  }
+
+}
+
+class NyaaItemStat extends StatelessWidget {
+  final IconData icon;
+  final MaterialColor color;
+  final String text;
+  final double spacing;
+
+  NyaaItemStat({Key key, this.icon, this.color, this.text, this.spacing = 0}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      avatar: CircleAvatar(
+        backgroundColor: this.color,
+        child: Icon(
+          this.icon,
+          color: Colors.white,
+          size: 15
+        ),
+      ),
+      label: Text(this.text, style: TextStyle(color: this.color)),
     );
   }
 }
