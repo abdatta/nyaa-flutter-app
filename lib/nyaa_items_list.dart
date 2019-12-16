@@ -1,9 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:nyaa_app/nyaa_item.dart';
-import 'package:nyaa_app/nyaa_scraper.dart';
 
 class NyaaItemsList extends StatefulWidget {
-  final List<NyaaItem> items;
+  final Future<List<NyaaItem>> items;
 
   NyaaItemsList({Key key, this.items}) : super(key: key);
 
@@ -12,30 +13,25 @@ class NyaaItemsList extends StatefulWidget {
 }
 
 class _NyaaItemsListState extends State<NyaaItemsList> {
-  Future<List<NyaaItem>> items;
-
-  @override
-  void initState() {
-    super.initState();
-    this.items = scrape();
-  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<NyaaItem>>(
-      future: this.items,
+      future: widget.items,
       builder: (context, snapshot) {
+        List<NyaaItem> items = snapshot.data;
         if (snapshot.hasData) {
-          return Column(
-            children: <Widget>[
-              for(NyaaItem item in snapshot.data)
-                NyaaItemCard(item: item)
-            ],
+          return ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              return NyaaItemCard(
+                item: items[index],
+              );
+            },
           );
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }
-
         // By default, show a loading spinner.
         return Padding(
           padding: EdgeInsets.all(10),
