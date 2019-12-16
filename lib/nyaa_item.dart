@@ -45,27 +45,32 @@ class NyaaItemCard extends StatelessWidget{
                       ],
                     ),
                   ),
-                  Wrap(
-                    spacing: 5,
+                  Row(
                     children: <Widget>[
+                      Wrap(
+                        spacing: 5,
+                        children: <Widget>[
+                          NyaaItemStat(
+                            icon: Icons.file_upload,
+                            color: Colors.green,
+                            text: this.item.seeders.toString()
+                          ),
+                          NyaaItemStat(
+                            icon: Icons.file_download,
+                            color: Colors.red,
+                            text: this.item.leechers.toString()
+                          ),
+                          NyaaItemStat(
+                            icon: Icons.offline_pin,
+                            text: this.item.downloaded.toString(),
+                            spacing: 2,
+                          ),
+                        ],
+                      ),
+                      Spacer(),
                       if (this.item.comments > 0) NyaaItemStat(
                         icon: Icons.comment,
                         text: this.item.comments.toString(),
-                        spacing: 2,
-                      ),
-                      NyaaItemStat(
-                        icon: Icons.file_upload,
-                        color: Colors.green,
-                        text: this.item.seeders.toString()
-                      ),
-                      NyaaItemStat(
-                        icon: Icons.file_download,
-                        color: Colors.red,
-                        text: this.item.leechers.toString()
-                      ),
-                      NyaaItemStat(
-                        icon: Icons.offline_pin,
-                        text: this.item.downloaded.toString(),
                         spacing: 2,
                       ),
                     ],
