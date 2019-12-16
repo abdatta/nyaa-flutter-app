@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nyaa_app/nyaa_drawer.dart';
-import 'package:nyaa_app/nyaa_scraper.dart';
+import 'package:nyaa_app/nyaa_items_list.dart';
 
 void main() => runApp(MyApp());
 
@@ -77,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         children: <Widget>[
-          Center(child: NyaaItemsScraped()),
+          Center(child: NyaaItemsList()),
           Center(child: Text('You have pushed the button this many times:')),
           Center(child: Text(
             '$_counter',

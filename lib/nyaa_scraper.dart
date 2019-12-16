@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart' as material;
 import 'package:http/http.dart'; // Contains a client for making API calls
 import 'package:html/parser.dart'; // Contains HTML parsers to generate a Document object
-import 'package:html/dom.dart';
+import 'package:html/dom.dart'; // Contains DOM related classes for extracting data from elements
 import 'package:nyaa_app/nyaa_item.dart';
-import 'package:nyaa_app/nyaa_items_list.dart'; // Contains DOM related classes for extracting data from elements
+
+const NYAA_URL = 'https://nyaa.si/?f=0&c=0_0&q=detective+conan';
 
 Document toDoc(Element elem) {
   var text = elem.innerHtml.replaceAll('<td', '<pd').replaceAll('</td', '</pd');
@@ -11,7 +11,6 @@ Document toDoc(Element elem) {
 }
 
 List<NyaaItem> fetchItems(String body) {
-// Use html parser
   var document = parse(body);
   List<Element> items = document.querySelectorAll('table.torrent-list > tbody > tr');
   print('items.length : ' + items.length.toString());
@@ -33,42 +32,8 @@ List<NyaaItem> fetchItems(String body) {
   return nyaaitems;
 }
 
-Future<List<NyaaItem>> initiate() async {
+Future<List<NyaaItem>> scrape() async {
   var client = Client();
-  Response response = await client.get('https://nyaa.si/?f=0&c=0_0&q=detective+conan');
+  Response response = await client.get(NYAA_URL);
   return fetchItems(response.body);
-}
-
-class NyaaItemsScraped extends material.StatefulWidget {
-  NyaaItemsScraped({material.Key key}) : super(key: key);
-
-  @override
-  _NyaaItemsScrapedState createState() => _NyaaItemsScrapedState();
-}
-
-class _NyaaItemsScrapedState extends material.State<NyaaItemsScraped> {
-  Future<List<NyaaItem>> item;
-
-  @override
-  void initState() {
-    super.initState();
-    this.item = initiate();
-  }
-
-  @override
-  material.Widget build(material.BuildContext context) {
-    return material.FutureBuilder<List<NyaaItem>>(
-      future: this.item,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return NyaaItemsList(items: snapshot.data);
-        } else if (snapshot.hasError) {
-          return material.Text("${snapshot.error}");
-        }
-
-        // By default, show a loading spinner.
-        return material.CircularProgressIndicator();
-      },
-    );
-  }
 }
