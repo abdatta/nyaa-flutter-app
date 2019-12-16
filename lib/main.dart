@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nyaa_app/nyaa_drawer.dart';
+import 'package:nyaa_app/nyaa_item.dart';
 import 'package:nyaa_app/nyaa_items_list.dart';
+import 'package:nyaa_app/nyaa_scraper.dart';
 
 void main() => runApp(MyApp());
 
@@ -46,16 +48,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  Future<List<NyaaItem>> items = scrape();
+  bool loading = false;
 
-  void _incrementCounter() {
+  void refresh() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      this.loading = true;
+      this.items = scrape();
+      this.items.whenComplete(() {
+        setState(() {
+          this.loading = false;
+        });
+      });
     });
   }
 
@@ -73,23 +77,14 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: ListView(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        children: <Widget>[
-          Center(child: NyaaItemsList()),
-          Center(child: Text('You have pushed the button this many times:')),
-          Center(child: Text(
-            '$_counter',
-            style: Theme.of(context).textTheme.display1,
-          )),
-        ],
+      body: Center(
+        child: (this.loading) ? CircularProgressIndicator() : NyaaItemsList(items: this.items)
       ),
       drawer: NyaaDrawer(tiles: ['Upload', 'Info', 'RSS', 'Twitter', 'Fap']),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: refresh,
         tooltip: 'Increment',
-        child: Icon(Icons.add),
+        child: Icon(Icons.refresh),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
