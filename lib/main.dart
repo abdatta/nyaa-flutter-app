@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:nyaa_app/nyaa_drawer.dart';
 import 'package:nyaa_app/nyaa_item.dart';
 import 'package:nyaa_app/nyaa_items_list.dart';
@@ -108,6 +109,15 @@ class _MyHomePageState extends State<MyHomePage> {
               });
             },
           ),
+          PopupMenuButton<String>(
+            onSelected: (String result) { print(result); },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              nyaaPopupMenuItem(value: 'profile', icon: Icons.account_circle, text: 'Profile'),
+              nyaaPopupMenuItem(value: 'torrents', icon: Icons.cloud_upload, text: 'Torrents'),
+              nyaaPopupMenuItem(value: 'dark_mode', icon: Icons.brightness_4, text: 'Dark Mode'),
+              nyaaPopupMenuItem(value: 'logout', icon: Icons.exit_to_app, text: 'Logout')
+            ],
+          )
         ],
       ),
       body: Center(
@@ -119,6 +129,16 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: Icon(Icons.refresh),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  PopupMenuItem<String> nyaaPopupMenuItem({String value, String text, IconData icon}) {
+    return PopupMenuItem<String>(
+      value: value,
+      child: Wrap(
+        spacing: 8,
+        children: <Widget>[Icon(icon, size: 18), Text(text)]
+      ),
     );
   }
 }
