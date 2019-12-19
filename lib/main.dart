@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Nyaa.si'),
+      home: MyHomePage(title: 'Nyaa'),
     );
   }
 }
@@ -49,12 +49,20 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Future<List<NyaaItem>> items = scrape();
+  String search = '';
   bool loading = false;
+  bool searching = false;
 
   void refresh() {
+    update(this.search);
+  }
+
+  void update(String query) {
     setState(() {
+      this.searching = false;
       this.loading = true;
-      this.items = scrape();
+      this.search = query;
+      this.items = scrape(query: query);
       this.items.whenComplete(() {
         setState(() {
           this.loading = false;
@@ -75,7 +83,32 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: this.searching ? TextField(
+          cursorColor: Colors.white,
+          autofocus: true,
+          controller: TextEditingController(text: this.search),
+          style: TextStyle(color: Colors.white, fontSize: 20),
+          decoration: InputDecoration(
+            focusColor: Colors.white,
+            hoverColor: Colors.white,
+            hintText: 'Search',
+            hintStyle: TextStyle(color: Colors.white, fontSize: 20)
+          ),
+          textInputAction: TextInputAction.search,
+          onSubmitted: update
+        ) : Text(widget.title + (this.search != '' ? ' :: ' + this.search : '')),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(this.searching ? Icons.clear : Icons.search),
+            tooltip: 'Search',
+            onPressed: () {
+              setState(() {
+                print('Search');
+                this.searching = !this.searching;
+              });
+            },
+          ),
+        ],
       ),
       body: Center(
         child: (this.loading) ? CircularProgressIndicator() : NyaaItemsList(items: this.items)

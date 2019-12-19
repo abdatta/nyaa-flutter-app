@@ -3,11 +3,7 @@ import 'package:html/parser.dart'; // Contains HTML parsers to generate a Docume
 import 'package:html/dom.dart'; // Contains DOM related classes for extracting data from elements
 import 'package:nyaa_app/nyaa_item.dart';
 
-const NYAA_URLS = [
-  'https://nyaa.si/',
-  'https://nyaa.si/?f=0&c=0_0&q=detective+conan'
-];
-int url_i = 0;
+const String NYAA_URL = 'https://nyaa.si/';
 
 Document toDoc(Element elem) {
   var text = elem.innerHtml.replaceAll('<td', '<pd').replaceAll('</td', '</pd');
@@ -36,8 +32,12 @@ List<NyaaItem> fetchItems(String body) {
   return nyaaitems;
 }
 
-Future<List<NyaaItem>> scrape() async {
+Future<List<NyaaItem>> scrape({String query = ''}) async {
+  String url = NYAA_URL;
+  if (query != '') {
+    url += '?f=0&c=0_0&q=' + Uri.encodeComponent(query);
+  }
   var client = Client();
-  Response response = await client.get(NYAA_URLS[url_i++ % 2]);
+  Response response = await client.get(url);
   return fetchItems(response.body);
 }
