@@ -26,7 +26,10 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Nyaa'),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => MyHomePage(title: 'Nyaa')
+      },
     );
   }
 }
@@ -50,21 +53,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Future<List<NyaaItem>> items = scrape();
-  String search = '';
+  Future<List<NyaaItem>> items;
+  String query;
   bool loading = false;
   bool searching = false;
 
-  void refresh() {
-    update(this.search);
+  /* Note: This function doesn't update the state though */
+  void update(String newQuery) {
+    newQuery = newQuery.trim();
+    if (newQuery != this.query){
+      this.query = newQuery;
+      this.items = scrape(this.query);
+    }
   }
 
-  void update(String query) {
+  void refresh() {
     setState(() {
-      this.searching = false;
       this.loading = true;
-      this.search = query;
-      this.items = scrape(query: query);
+      this.items = scrape(this.query);
       this.items.whenComplete(() {
         setState(() {
           this.loading = false;
@@ -73,8 +79,15 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void search(String query) {
+    this.searching = false;
+    if (query.trim() == this.query) return;
+    Navigator.pushNamed(context, '/', arguments: query);
+  }
+
   @override
   Widget build(BuildContext context) {
+    update(ModalRoute.of(context).settings.arguments ?? '');
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -86,8 +99,8 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: this.searching ?
-          NyaaSearchBar(search: this.search, update: this.update) :
-          Text(widget.title + (this.search != '' ? ' :: ' + this.search : '')),
+          NyaaSearchBar(search: this.query, update: this.search) :
+          Text(widget.title + (this.query != '' ? ' :: ' + this.query : '')),
         actions: <Widget>[
           IconButton(
             icon: Icon(this.searching ? Icons.clear : Icons.search),

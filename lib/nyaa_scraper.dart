@@ -13,7 +13,7 @@ Document toDoc(Element elem) {
 List<NyaaItem> fetchItems(String body) {
   var document = parse(body);
   List<Element> items = document.querySelectorAll('table.torrent-list > tbody > tr');
-  print('items.length : ' + items.length.toString());
+  print('Found: ' + items.length.toString() + ' items');
   List<NyaaItem> nyaaitems = [];
   for(Element item in items) {
     List<Element> props = toDoc(item).querySelectorAll('pd');
@@ -32,12 +32,12 @@ List<NyaaItem> fetchItems(String body) {
   return nyaaitems;
 }
 
-Future<List<NyaaItem>> scrape({String query = ''}) async {
+Future<List<NyaaItem>> scrape(String query) async {
   String url = NYAA_URL;
-  if (query != '') {
+  if (query.trim() != '') {
     url += '?f=0&c=0_0&q=' + Uri.encodeComponent(query);
   }
-  var client = Client();
-  Response response = await client.get(url);
+  print('Fetching: ' + url);
+  Response response = await Client().get(url);
   return fetchItems(response.body);
 }
