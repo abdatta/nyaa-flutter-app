@@ -22,7 +22,7 @@ List<NyaaItem> fetchItems(String body) {
       title: toDoc(props[1]).querySelectorAll('a').last.text,
       comments: int.tryParse(toDoc(props[1]).querySelector('a.comments') == null ? '0' : toDoc(props[1]).querySelector('a.comments').text.trim()) ?? -1,
       size: props[3].text,
-      date: props[4].text,
+      date: DateTime.parse(props[4].text.trim() + 'Z').toLocal(),
       seeders: int.tryParse(props[5].text.trim()) ?? -1,
       leechers: int.tryParse(props[6].text.trim()) ?? -1,
       downloaded: int.tryParse(props[7].text.trim()) ?? -1,

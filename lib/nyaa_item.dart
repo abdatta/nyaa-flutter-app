@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class NyaaItem {
   final category;
   final title;
   final size;
-  final date;
+  final DateTime date;
   final int comments;
   final int seeders;
   final int leechers;
@@ -17,6 +18,12 @@ class NyaaItemCard extends StatelessWidget{
   final NyaaItem item;
 
   NyaaItemCard({Key key, this.item}) : super(key: key);
+
+  String formatDate(DateTime datetime) {
+    String date = DateFormat('yMMMd').format(datetime);
+    String time = DateFormat('Hm').format(datetime);
+    return '$date $time';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +48,7 @@ class NyaaItemCard extends StatelessWidget{
                         Text('|'),
                         Text(this.item.size, style: TextStyle(fontWeight: FontWeight.bold)),
                         Text('|'),
-                        Text(this.item.date, style: TextStyle(fontWeight: FontWeight.bold))
+                        Text(formatDate(this.item.date), style: TextStyle(fontWeight: FontWeight.bold))
                       ],
                     ),
                   ),
