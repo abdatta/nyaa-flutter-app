@@ -121,7 +121,9 @@ class _MyHomePageState extends State<MyHomePage> {
       drawer: NyaaDrawer(tiles: ['Upload', 'Info', 'RSS', 'Twitter', 'Fap']),
       floatingActionButton: FloatingActionButton(
         onPressed: refresh,
-        tooltip: 'Increment',
+        tooltip: 'Refresh',
+        backgroundColor: Colors.orange,
+        splashColor: Colors.orangeAccent,
         child: Icon(Icons.refresh),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
