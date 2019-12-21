@@ -1,7 +1,6 @@
-# nyaa_app
+# nyaa-flutter-app ![Unreleased](https://img.shields.io/badge/Under%20Development-Unreleased-red.svg)
 
-A new Flutter project.
-
+A brand new Flutter implementation of [nyaa.si](https://nyaa.si/) for both Android and iOS.
 ## Getting Started
 
 This project is a starting point for a Flutter application.
