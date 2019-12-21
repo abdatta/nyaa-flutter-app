@@ -10,6 +10,15 @@ Document toDoc(Element elem) {
   return parse(text);
 }
 
+NyaaItemType getNyaaItemType(String type) {
+  switch (type) {
+    case 'success': return NyaaItemType.TRUSTED;
+    case 'danger': return NyaaItemType.REMAKE;
+    case 'warning': return NyaaItemType.BATCH;
+    default: return NyaaItemType.NORMAL;
+  }
+}
+
 List<NyaaItem> fetchItems(String body) {
   var document = parse(body);
   List<Element> items = document.querySelectorAll('table.torrent-list > tbody > tr');
@@ -18,6 +27,7 @@ List<NyaaItem> fetchItems(String body) {
   for(Element item in items) {
     List<Element> props = toDoc(item).querySelectorAll('pd');
     var nyaaitem = NyaaItem(
+      type: getNyaaItemType(item.className.trim()),
       category: toDoc(props[0]).querySelector('a').attributes['href'].substring(4),
       title: toDoc(props[1]).querySelectorAll('a').last.text,
       comments: int.tryParse(toDoc(props[1]).querySelector('a.comments') == null ? '0' : toDoc(props[1]).querySelector('a.comments').text.trim()) ?? -1,

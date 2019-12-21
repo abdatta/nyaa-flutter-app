@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+enum NyaaItemType { NORMAL, TRUSTED, REMAKE, BATCH }
+
 class NyaaItem {
-  final category;
-  final title;
-  final size;
+  final NyaaItemType type;
+  final String category;
+  final String title;
+  final String size;
   final DateTime date;
   final int comments;
   final int seeders;
   final int leechers;
   final int downloaded;
 
-  NyaaItem({Key key, this.category, this.title, this.size, this.date, this.comments, this.seeders, this.leechers, this.downloaded});
+  NyaaItem({Key key, this.type, this.category, this.title, this.size, this.date, this.comments, this.seeders, this.leechers, this.downloaded});
 }
 
 class NyaaItemCard extends StatelessWidget{
@@ -25,9 +28,20 @@ class NyaaItemCard extends StatelessWidget{
     return '$date $time';
   }
 
+  Color getTypeColor(NyaaItemType type) {
+    switch (type) {
+      case NyaaItemType.TRUSTED: return Color(0xFFdff0d8); // Bootstrap's success color
+      case NyaaItemType.REMAKE: return Color(0xFFf2dede); // Bootstrap's danger color
+      case NyaaItemType.BATCH: return Color(0xFFfcf8e3); // Bootstrap's warning color
+      case NyaaItemType.NORMAL:
+      default: return Colors.white;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: getTypeColor(this.item.type),
       child: Container(
         padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
         child: Row(
@@ -146,6 +160,7 @@ class NyaaItemStat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Chip(
+      backgroundColor: Colors.transparent,
       avatar: CircleAvatar(
         backgroundColor: this.color,
         child: Icon(
