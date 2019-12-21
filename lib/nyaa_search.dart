@@ -9,10 +9,12 @@ class NyaaSearchBar extends StatelessWidget {
 
    @override
    Widget build(BuildContext context) {
+     TextEditingController controller = TextEditingController(text: this.search);
+     controller.selection = TextSelection(baseOffset: 0, extentOffset: this.search.length);
      return TextField(
           cursorColor: Colors.white,
           autofocus: true,
-          controller: TextEditingController(text: this.search),
+          controller: controller,
           style: TextStyle(color: Colors.white, fontSize: 20),
           decoration: InputDecoration(
             focusColor: Colors.white,

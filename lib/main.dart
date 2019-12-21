@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:nyaa_app/nyaa_drawer.dart';
 import 'package:nyaa_app/nyaa_item.dart';
 import 'package:nyaa_app/nyaa_items_list.dart';
@@ -87,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: this.searching ?
-          NyaaSearchBar(search: this.search, update: this.update,) :
+          NyaaSearchBar(search: this.search, update: this.update) :
           Text(widget.title + (this.search != '' ? ' :: ' + this.search : '')),
         actions: <Widget>[
           IconButton(
