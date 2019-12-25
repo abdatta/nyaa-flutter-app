@@ -19,7 +19,7 @@ NyaaItemType getNyaaItemType(String type) {
   }
 }
 
-List<NyaaItem> fetchItems(String body) {
+List<NyaaItem> extractItems(String body) {
   var document = parse(body);
   List<Element> items = document.querySelectorAll('table.torrent-list > tbody > tr');
   print('Found: ' + items.length.toString() + ' items');
@@ -42,12 +42,74 @@ List<NyaaItem> fetchItems(String body) {
   return nyaaitems;
 }
 
-Future<List<NyaaItem>> scrape(String query) async {
+Future<List<NyaaItem>> fetchItems(String query) async {
   String url = NYAA_URL;
   if (query.trim() != '') {
     url += '?f=0&c=0_0&q=' + Uri.encodeComponent(query);
   }
   print('Fetching: ' + url);
   Response response = await Client().get(url);
-  return fetchItems(response.body);
+  await fetchTorrent(''); // for testing
+  return extractItems(response.body);
+}
+
+class NyaaComment {
+  String user;
+  String avatar;
+  String date;
+  String body;
+
+  NyaaComment({this.user, this.avatar, this.date, this.body});
+}
+
+NyaaComment extractComment(Element elem) {
+  Document doc = toDoc(elem);
+  Element userElement = doc.querySelector('.panel-body > .col-md-2 > p > a');
+  Element avatarElement = doc.querySelector('.panel-body > .col-md-2 > img.avatar');
+  Element dateElement = doc.querySelector('.panel-body > .comment > .comment-details > a > small');
+  Element bodyElement = doc.querySelector('.panel-body > .comment > .comment-body > .comment-content');
+
+  return NyaaComment(
+    user: userElement.text.trim(),
+    avatar: avatarElement.attributes['src'],
+    date: dateElement.text.trim(),
+    body: bodyElement.text.trim()
+  );
+}
+
+class NyaaTorrent {
+  String title;
+  List<List<String>> metadata;
+  String description;
+  List<NyaaComment> comments;
+
+  NyaaTorrent({this.title, this.metadata, this.description, this.comments});
+}
+
+NyaaTorrent extractTorrent(String body) {
+  Document document = parse(body);
+
+  Element titleElement = document.querySelector('.panel > .panel-heading > .panel-title');
+
+  List<Element> infoKeysElements = document.querySelectorAll('.panel > .panel-body > .row > .col-md-1');
+  List<Element> infoDataElements = document.querySelectorAll('.panel > .panel-body > .row > .col-md-5');
+  List<List<String>> infos = [];
+  for (int i=0; i<infoKeysElements.length; i++)
+    infos.add([infoKeysElements[i].text.trim(), infoDataElements[i].text.trim()]);
+
+  Element descriptionElement = document.querySelector('#torrent-description');
+  List<Element> commentsElements = document.querySelectorAll('div.comment-panel[id^=com-]');
+
+  return NyaaTorrent(
+    title: titleElement.text.trim(),
+    metadata: infos,
+    description: descriptionElement.text.trim(),
+    comments: commentsElements.map<NyaaComment>((Element elem) => extractComment(elem)).toList()
+  );
+}
+
+Future<NyaaTorrent> fetchTorrent(String url) async {
+  url = 'https://nyaa.si/view/1198135'; // for testing
+  Response response = await Client().get(url);
+  return extractTorrent(response.body);
 }

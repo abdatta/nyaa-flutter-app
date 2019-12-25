@@ -63,14 +63,14 @@ class _MyHomePageState extends State<MyHomePage> {
     newQuery = newQuery.trim();
     if (newQuery != this.query){
       this.query = newQuery;
-      this.items = scrape(this.query);
+      this.items = fetchItems(this.query);
     }
   }
 
   void refresh() {
     setState(() {
       this.loading = true;
-      this.items = scrape(this.query);
+      this.items = fetchItems(this.query);
       this.items.whenComplete(() {
         setState(() {
           this.loading = false;
