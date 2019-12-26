@@ -49,7 +49,6 @@ Future<List<NyaaItem>> fetchItems(String query) async {
   }
   print('Fetching: ' + url);
   Response response = await Client().get(url);
-  await fetchTorrent(''); // for testing
   return extractItems(response.body);
 }
 
@@ -109,7 +108,7 @@ NyaaTorrent extractTorrent(String body) {
 }
 
 Future<NyaaTorrent> fetchTorrent(String url) async {
-  url = 'https://nyaa.si/view/1198135'; // for testing
+  print('Fetching: ' + url);
   Response response = await Client().get(url);
   return extractTorrent(response.body);
 }

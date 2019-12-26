@@ -5,6 +5,7 @@ import 'package:nyaa_app/nyaa_items_list.dart';
 import 'package:nyaa_app/nyaa_popup_menu.dart';
 import 'package:nyaa_app/nyaa_scraper.dart';
 import 'package:nyaa_app/nyaa_search.dart';
+import 'package:nyaa_app/nyaa_torrent_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -26,9 +27,10 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
+      initialRoute: '/view',
       routes: {
-        '/': (context) => MyHomePage(title: 'Nyaa')
+        '/': (context) => MyHomePage(title: 'Nyaa'),
+        '/view': (context) => NyaaTorrentPage(link: 'https://nyaa.si/view/1198135')
       },
     );
   }
