@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nyaa_app/nyaa_scraper.dart';
+import 'package:nyaa_app/nyaa_torrent.dart';
 
 class NyaaTorrentPage extends StatefulWidget {
   final String link;
@@ -34,7 +35,7 @@ class _NyaaTorrentPageState extends State<NyaaTorrentPage> {
           appBar: AppBar(
             title: Text(torrent.title),
           ),
-          body: Center(child: Text(torrent.description)),
+          body: NyaaTorrentCard(torrent: torrent),
           floatingActionButton: FloatingActionButton(
             onPressed: () => print('refresh'),
             tooltip: 'Refresh',
