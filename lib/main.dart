@@ -27,10 +27,10 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/view',
+      initialRoute: '/',
       routes: {
         '/': (context) => MyHomePage(title: 'Nyaa'),
-        '/view': (context) => NyaaTorrentPage(link: 'https://nyaa.si/view/1198135')
+        '/view': (context) => NyaaTorrentPage(link: ModalRoute.of(context).settings.arguments)
       },
     );
   }

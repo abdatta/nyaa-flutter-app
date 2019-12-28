@@ -3,7 +3,7 @@ import 'package:html/parser.dart'; // Contains HTML parsers to generate a Docume
 import 'package:html/dom.dart'; // Contains DOM related classes for extracting data from elements
 import 'package:nyaa_app/nyaa_item.dart';
 
-const String NYAA_URL = 'https://nyaa.si/';
+const String NYAA_URL = 'https://nyaa.si';
 
 Document toDoc(Element elem) {
   var text = elem.innerHtml.replaceAll('<td', '<pd').replaceAll('</td', '</pd');
@@ -11,12 +11,14 @@ Document toDoc(Element elem) {
 }
 
 NyaaItemType getNyaaItemType(String type) {
-  switch (type) {
-    case 'success': return NyaaItemType.TRUSTED;
-    case 'danger': return NyaaItemType.REMAKE;
-    case 'warning': return NyaaItemType.BATCH;
-    default: return NyaaItemType.NORMAL;
-  }
+  if (type.contains('success'))
+    return NyaaItemType.TRUSTED;
+  else if (type.contains('danger'))
+    return NyaaItemType.REMAKE;
+  else if (type.contains('warning'))
+    return NyaaItemType.BATCH;
+  else
+    return NyaaItemType.NORMAL;
 }
 
 List<NyaaItem> extractItems(String body) {
@@ -30,6 +32,7 @@ List<NyaaItem> extractItems(String body) {
       type: getNyaaItemType(item.className.trim()),
       category: toDoc(props[0]).querySelector('a').attributes['href'].substring(4),
       title: toDoc(props[1]).querySelectorAll('a').last.text,
+      titleLink: toDoc(props[1]).querySelectorAll('a').last.attributes['href'],
       comments: int.tryParse(toDoc(props[1]).querySelector('a.comments') == null ? '0' : toDoc(props[1]).querySelector('a.comments').text.trim()) ?? -1,
       size: props[3].text,
       date: DateTime.parse(props[4].text.trim() + 'Z').toLocal(),
@@ -45,7 +48,7 @@ List<NyaaItem> extractItems(String body) {
 Future<List<NyaaItem>> fetchItems(String query) async {
   String url = NYAA_URL;
   if (query.trim() != '') {
-    url += '?f=0&c=0_0&q=' + Uri.encodeComponent(query);
+    url += '/?f=0&c=0_0&q=' + Uri.encodeComponent(query);
   }
   print('Fetching: ' + url);
   Response response = await Client().get(url);
@@ -77,17 +80,19 @@ NyaaComment extractComment(Element elem) {
 }
 
 class NyaaTorrent {
-  String title;
-  List<List<String>> metadata;
-  String description;
-  List<NyaaComment> comments;
+  final NyaaItemType type;
+  final String title;
+  final List<List<String>> metadata;
+  final String description;
+  final List<NyaaComment> comments;
 
-  NyaaTorrent({this.title, this.metadata, this.description, this.comments});
+  NyaaTorrent({this.type, this.title, this.metadata, this.description, this.comments});
 }
 
 NyaaTorrent extractTorrent(String body) {
   Document document = parse(body);
 
+  Element panelElement = document.querySelector('.panel');
   Element titleElement = document.querySelector('.panel > .panel-heading > .panel-title');
 
   List<Element> infoKeysElements = document.querySelectorAll('.panel > .panel-body > .row > .col-md-1');
@@ -100,6 +105,7 @@ NyaaTorrent extractTorrent(String body) {
   List<Element> commentsElements = document.querySelectorAll('div.comment-panel[id^=com-]');
 
   return NyaaTorrent(
+    type: getNyaaItemType(panelElement.className),
     title: titleElement.text.trim(),
     metadata: infos,
     description: descriptionElement.text.trim(),
@@ -108,6 +114,7 @@ NyaaTorrent extractTorrent(String body) {
 }
 
 Future<NyaaTorrent> fetchTorrent(String url) async {
+  url = NYAA_URL + url.trim();
   print('Fetching: ' + url);
   Response response = await Client().get(url);
   return extractTorrent(response.body);

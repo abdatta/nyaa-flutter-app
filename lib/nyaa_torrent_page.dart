@@ -2,40 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:nyaa_app/nyaa_scraper.dart';
 import 'package:nyaa_app/nyaa_torrent.dart';
 
-class NyaaTorrentPage extends StatefulWidget {
+class NyaaTorrentPage extends StatelessWidget {
+  final Future<NyaaTorrent> torrent;
   final String link;
 
-  NyaaTorrentPage({Key key, this.link}) : super(key: key);
-
-  @override
-  _NyaaTorrentPageState createState() => _NyaaTorrentPageState();
-}
-
-class _NyaaTorrentPageState extends State<NyaaTorrentPage> {
-  Future<NyaaTorrent> torrent;
+  NyaaTorrentPage({Key key, this.link}) : torrent = fetchTorrent(link), super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    this.torrent = fetchTorrent(widget.link);
-    return FutureBuilder<NyaaTorrent>(
-      future: this.torrent,
-      builder: (context, snapshot) {
-        NyaaTorrent torrent = snapshot.data;
-        if (!snapshot.hasData) {
-          // Show a loading spinner untill data is fetched
-          return Padding(
-            padding: EdgeInsets.all(10),
-            child: Center(child: CircularProgressIndicator()),
-          );
-        } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
-
-        return Scaffold(
+    return Scaffold(
           appBar: AppBar(
-            title: Text(torrent.title),
+            title: Text('nyaa.si' + this.link),
           ),
-          body: NyaaTorrentCard(torrent: torrent),
+          body: FutureBuilder<NyaaTorrent>(
+            future: this.torrent,
+            builder: (context, snapshot) {
+              NyaaTorrent torrent = snapshot.data;
+              if (!snapshot.hasData) {
+                // Show a loading spinner untill data is fetched
+                return Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
+              return NyaaTorrentCard(torrent: torrent);
+            }
+          ),
           floatingActionButton: FloatingActionButton(
             onPressed: () => print('refresh'),
             tooltip: 'Refresh',
@@ -44,6 +38,5 @@ class _NyaaTorrentPageState extends State<NyaaTorrentPage> {
             child: Icon(Icons.refresh),
           ),
         );
-      });
   }
 }

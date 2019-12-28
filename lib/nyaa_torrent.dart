@@ -3,7 +3,7 @@ import 'package:nyaa_app/nyaa_item.dart';
 import 'package:nyaa_app/nyaa_scraper.dart';
 
 class NyaaTorrentCard extends StatelessWidget {
-  NyaaTorrent torrent;
+  final NyaaTorrent torrent;
 
   NyaaTorrentCard({Key key, this.torrent}): super(key: key);
 
@@ -13,7 +13,7 @@ class NyaaTorrentCard extends StatelessWidget {
       case NyaaItemType.REMAKE: return Color(0xFFf2dede); // Bootstrap's danger color
       case NyaaItemType.BATCH: return Color(0xFFfcf8e3); // Bootstrap's warning color
       case NyaaItemType.NORMAL:
-      default: return Colors.white;
+      default: return Colors.grey.shade200;
     }
   }
 
@@ -28,12 +28,13 @@ class NyaaTorrentCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
+              width: double.infinity,
               padding: EdgeInsets.all(10),
-              color: this.getTypeColor(NyaaItemType.REMAKE),
+              color: this.getTypeColor(this.torrent.type),
               child: Text(torrent.title, style: TextStyle(fontSize: 18))
             ),
             Container(
-              margin: EdgeInsets.all(4),
+              margin: EdgeInsets.fromLTRB(4, 10, 4, 10),
               decoration: BoxDecoration(
                 borderRadius: new BorderRadius.circular(5),
               ),
@@ -43,7 +44,7 @@ class NyaaTorrentCard extends StatelessWidget {
                     children: <Widget>[
                       Container(
                         width: 90,
-                        margin: EdgeInsets.fromLTRB(4, 4, 0, 4),
+                        margin: EdgeInsets.fromLTRB(4, 5, 0, 5),
                         decoration: new BoxDecoration(
                           color: Colors.orange.shade200,
                           borderRadius: BorderRadius.only(
@@ -58,7 +59,7 @@ class NyaaTorrentCard extends StatelessWidget {
                       ),
                       Expanded(
                         child: Container(
-                          margin: EdgeInsets.all(4),
+                          margin: EdgeInsets.fromLTRB(4, 5, 4, 5),
                           decoration: new BoxDecoration(
                             color: Colors.grey.shade200,
                             borderRadius: BorderRadius.only(
@@ -80,7 +81,7 @@ class NyaaTorrentCard extends StatelessWidget {
             Container(
               width: double.infinity,
               padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-              color: Colors.blue.shade100,
+              color: Colors.blue.shade50,
               child: Wrap(
                 spacing: 10,
                 children: <Widget>[

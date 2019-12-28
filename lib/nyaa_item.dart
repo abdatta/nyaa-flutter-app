@@ -7,6 +7,7 @@ class NyaaItem {
   final NyaaItemType type;
   final String category;
   final String title;
+  final String titleLink;
   final String size;
   final DateTime date;
   final int comments;
@@ -14,7 +15,7 @@ class NyaaItem {
   final int leechers;
   final int downloaded;
 
-  NyaaItem({Key key, this.type, this.category, this.title, this.size, this.date, this.comments, this.seeders, this.leechers, this.downloaded});
+  NyaaItem({Key key, this.type, this.category, this.title, this.titleLink, this.size, this.date, this.comments, this.seeders, this.leechers, this.downloaded});
 }
 
 class NyaaItemCard extends StatelessWidget{
@@ -52,19 +53,24 @@ class NyaaItemCard extends StatelessWidget{
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(this.item.title, style: TextStyle(fontSize: 16)),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(2, 6, 0, 0),
-                    child: Wrap(
-                      spacing: 6,
-                      children: <Widget>[
-                        Image.network('https://nyaa.si/static/img/icons/nyaa/' + this.item.category + '.png', height: 15),
-                        Text('|'),
-                        Text(this.item.size, style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text('|'),
-                        Text(formatDate(this.item.date), style: TextStyle(fontWeight: FontWeight.bold))
-                      ],
-                    ),
+                  for (Widget child in [
+                    Text(this.item.title, style: TextStyle(fontSize: 16)),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(2, 6, 0, 0),
+                      child: Wrap(
+                        spacing: 6,
+                        children: <Widget>[
+                          Image.network('https://nyaa.si/static/img/icons/nyaa/' + this.item.category + '.png', height: 15),
+                          Text('|'),
+                          Text(this.item.size, style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text('|'),
+                          Text(formatDate(this.item.date), style: TextStyle(fontWeight: FontWeight.bold))
+                        ],
+                      ),
+                    )
+                  ]) GestureDetector(
+                    child: child,
+                    onTap: () => Navigator.pushNamed(context, '/view', arguments: this.item.titleLink),
                   ),
                   Row(
                     children: <Widget>[
