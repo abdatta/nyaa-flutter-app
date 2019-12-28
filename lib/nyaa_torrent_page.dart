@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nyaa_app/nyaa_scraper.dart';
 import 'package:nyaa_app/nyaa_torrent.dart';
+import 'package:nyaa_app/nyaa_torrent_description.dart';
 
 class NyaaTorrentPage extends StatelessWidget {
   final Future<NyaaTorrent> torrent;
@@ -27,7 +28,12 @@ class NyaaTorrentPage extends StatelessWidget {
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
               }
-              return NyaaTorrentCard(torrent: torrent);
+              return ListView(
+                children: <Widget>[
+                  NyaaTorrentCard(torrent: torrent),
+                  NyaaTorrentDescription(description: torrent.description)
+                ],
+              );
             }
           ),
           floatingActionButton: FloatingActionButton(
