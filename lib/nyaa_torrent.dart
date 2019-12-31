@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:nyaa_app/nyaa_comment.dart';
 import 'package:nyaa_app/nyaa_item.dart';
 
@@ -16,6 +17,14 @@ class NyaaTorrentCard extends StatelessWidget {
   final NyaaTorrent torrent;
 
   NyaaTorrentCard({Key key, this.torrent}): super(key: key);
+
+  String formatDate(String utc) {
+    utc = utc.substring(0, utc.length-4) + 'Z';
+    DateTime datetime = DateTime.parse(utc).toLocal();
+    String date = DateFormat('yMMMd').format(datetime);
+    String time = DateFormat('Hm').format(datetime);
+    return '$date $time';
+  }
 
   Color getTypeColor(NyaaItemType type) {
     switch (type) {
@@ -79,7 +88,7 @@ class NyaaTorrentCard extends StatelessWidget {
                           ),
                           child: Padding(
                             padding: EdgeInsets.fromLTRB(4, 6, 6, 6),
-                            child: Text(md[1], style: TextStyle(fontSize: 15))
+                            child: Text(md[0]=='Date:' ? formatDate(md[1]) : md[1], style: TextStyle(fontSize: 15))
                           ),
                         ),
                       )

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class NyaaComment {
   String user;
@@ -45,6 +46,14 @@ class NyaaCommentCard extends StatelessWidget {
 
   NyaaCommentCard({Key key, this.comment}) : super(key: key);
 
+  String formatDate(String utc) {
+    utc = utc.substring(0, utc.length-4) + 'Z';
+    DateTime datetime = DateTime.parse(utc).toLocal();
+    String date = DateFormat('yMd').format(datetime);
+    String time = DateFormat('Hm').format(datetime);
+    return '$date $time';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -64,12 +73,13 @@ class NyaaCommentCard extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(10),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(this.comment.user, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                          Text(this.comment.date, style: TextStyle(fontWeight: FontWeight.bold))
+                          Text(formatDate(this.comment.date), style: TextStyle(fontWeight: FontWeight.w300))
                         ],
                       ),
                       Container(
