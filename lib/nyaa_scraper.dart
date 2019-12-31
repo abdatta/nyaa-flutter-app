@@ -1,7 +1,9 @@
 import 'package:http/http.dart'; // Contains a client for making API calls
 import 'package:html/parser.dart'; // Contains HTML parsers to generate a Document object
 import 'package:html/dom.dart'; // Contains DOM related classes for extracting data from elements
+import 'package:nyaa_app/nyaa_comment.dart';
 import 'package:nyaa_app/nyaa_item.dart';
+import 'package:nyaa_app/nyaa_torrent.dart';
 
 const String NYAA_URL = 'https://nyaa.si';
 
@@ -55,15 +57,6 @@ Future<List<NyaaItem>> fetchItems(String query) async {
   return extractItems(response.body);
 }
 
-class NyaaComment {
-  String user;
-  String avatar;
-  String date;
-  String body;
-
-  NyaaComment({this.user, this.avatar, this.date, this.body});
-}
-
 NyaaComment extractComment(Element elem) {
   Document doc = toDoc(elem);
   Element userElement = doc.querySelector('.panel-body > .col-md-2 > p > a');
@@ -77,16 +70,6 @@ NyaaComment extractComment(Element elem) {
     date: dateElement.text.trim(),
     body: bodyElement.text.trim()
   );
-}
-
-class NyaaTorrent {
-  final NyaaItemType type;
-  final String title;
-  final List<List<String>> metadata;
-  final String description;
-  final List<NyaaComment> comments;
-
-  NyaaTorrent({this.type, this.title, this.metadata, this.description, this.comments});
 }
 
 NyaaTorrent extractTorrent(String body) {

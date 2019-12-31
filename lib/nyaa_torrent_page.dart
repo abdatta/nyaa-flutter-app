@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nyaa_app/nyaa_comment.dart';
 import 'package:nyaa_app/nyaa_scraper.dart';
 import 'package:nyaa_app/nyaa_torrent.dart';
 import 'package:nyaa_app/nyaa_torrent_description.dart';
@@ -31,7 +32,8 @@ class NyaaTorrentPage extends StatelessWidget {
               return ListView(
                 children: <Widget>[
                   NyaaTorrentCard(torrent: torrent),
-                  NyaaTorrentDescription(description: torrent.description)
+                  NyaaTorrentDescription(description: torrent.description),
+                  NyaaCommentsList(comments: torrent.comments)
                 ],
               );
             }
