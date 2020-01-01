@@ -12,9 +12,7 @@ class NyaaTorrentDescription extends StatelessWidget {
       clipBehavior: Clip.antiAliasWithSaveLayer,
       margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
       child: ExpansionTile(
-        title: Container(
-          child: Text('Description', style: TextStyle(fontWeight: FontWeight.bold))
-        ),
+        title: Text('Description', style: TextStyle(fontWeight: FontWeight.bold)),
         trailing: Icon(Icons.keyboard_arrow_down),
         children: <Widget>[
           Container(

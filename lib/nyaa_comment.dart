@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
 
 class NyaaComment {
@@ -21,9 +22,7 @@ class NyaaCommentsList extends StatelessWidget {
       clipBehavior: Clip.antiAliasWithSaveLayer,
       margin: EdgeInsets.all(10),
       child: ExpansionTile(
-        title: Container(
-          child: Text('Comments (${comments.length})', style: TextStyle(fontWeight: FontWeight.bold))
-        ),
+        title: Text('Comments (${comments.length})', style: TextStyle(fontWeight: FontWeight.bold)),
         trailing: Icon(Icons.keyboard_arrow_down),
         children: <Widget>[
           Container(
@@ -84,7 +83,10 @@ class NyaaCommentCard extends StatelessWidget {
                       ),
                       Container(
                         margin: EdgeInsets.only(top: 5),
-                        child: Text(this.comment.body)
+                        child: MarkdownBody(
+                          data: this.comment.body,
+                          onTapLink: print,
+                          styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context).copyWith(textTheme: Theme.of(context).textTheme.copyWith(body1: Theme.of(context).textTheme.body1.copyWith(fontSize: 12)))))
                       )
                     ]
                   )
