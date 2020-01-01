@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:nyaa_app/nyaa_comment.dart';
 import 'package:nyaa_app/nyaa_item.dart';
-import 'package:nyaa_app/nyaa_scraper.dart';
+import 'package:nyaa_app/nyaa_torrent_files_list.dart';
 
 class NyaaTorrent {
   final NyaaItemType type;

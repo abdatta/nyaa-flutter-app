@@ -3,6 +3,7 @@ import 'package:nyaa_app/nyaa_comment.dart';
 import 'package:nyaa_app/nyaa_scraper.dart';
 import 'package:nyaa_app/nyaa_torrent.dart';
 import 'package:nyaa_app/nyaa_torrent_description.dart';
+import 'package:nyaa_app/nyaa_torrent_files_list.dart';
 
 class NyaaTorrentPage extends StatelessWidget {
   final String link;
@@ -32,6 +33,7 @@ class NyaaTorrentPage extends StatelessWidget {
             children: <Widget>[
               NyaaTorrentCard(torrent: torrent),
               NyaaTorrentDescription(description: torrent.description),
+              NyaaTorrentFilesList(files: torrent.files),
               NyaaCommentsList(comments: torrent.comments)
             ],
           );

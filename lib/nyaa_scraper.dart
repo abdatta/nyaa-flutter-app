@@ -1,10 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart'; // Contains a client for making API calls
 import 'package:html/parser.dart'; // Contains HTML parsers to generate a Document object
 import 'package:html/dom.dart'; // Contains DOM related classes for extracting data from elements
 import 'package:nyaa_app/nyaa_comment.dart';
 import 'package:nyaa_app/nyaa_item.dart';
 import 'package:nyaa_app/nyaa_torrent.dart';
+import 'package:nyaa_app/nyaa_torrent_files_list.dart';
 
 const String NYAA_URL = 'https://nyaa.si';
 
@@ -73,30 +73,14 @@ NyaaComment extractComment(Element elem) {
   );
 }
 
-class NyaaTorrentFile {
-  final String type; // 'file' or 'folder'
-  final String name;
-  final List<NyaaTorrentFile> subfiles;
-
-  NyaaTorrentFile({@required this.type, @required this.name, this.subfiles = const []});
-
-  @override
-  String toString({int depth = 0}) {
-    String ind = List.generate(depth, (i) => '  ').join('');
-    String res ='\n$ind[\n' + subfiles.map((f) => f.toString(depth: depth + 1)).toList().join('\n') + '\n$ind]';
-    return '$ind$type :: $name' + (type == 'folder' ? res : '');
-  }
-}
-
 List<NyaaTorrentFile> extractFilesList(Element elem) {
   return elem.children.map((fileElement) {
     String typeClass = toDoc(fileElement).querySelector('i').className;
     return typeClass.contains('folder') ? NyaaTorrentFile(
-      type: 'folder',
+      isFolder: true,
       name: fileElement.children[0].text.trim(),
       subfiles: extractFilesList(fileElement.children[1])
     ): NyaaTorrentFile(
-      type: 'file',
       name: fileElement.text.trim(),
     );
   }).toList();
