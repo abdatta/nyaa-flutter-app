@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:nyaa_app/nyaa_comment.dart';
 import 'package:nyaa_app/nyaa_item.dart';
+import 'package:nyaa_app/nyaa_scraper.dart';
 
 class NyaaTorrent {
   final NyaaItemType type;
   final String title;
   final List<List<String>> metadata;
   final String description;
+  final List<NyaaTorrentFile> files;
   final List<NyaaComment> comments;
 
-  NyaaTorrent({this.type, this.title, this.metadata, this.description, this.comments});
+  NyaaTorrent({this.type, this.title, this.metadata, this.description, this.files, this.comments});
 }
 
 class NyaaTorrentCard extends StatelessWidget {
