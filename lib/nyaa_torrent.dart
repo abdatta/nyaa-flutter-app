@@ -28,6 +28,31 @@ class NyaaTorrentCard extends StatelessWidget {
     return '$date $time';
   }
 
+  Widget formatMetaData(String meta, String data, BuildContext context) {
+    switch (meta) {
+      case 'Date:':
+        return Text(formatDate(data));
+        break;
+      case 'Submitter:':
+        return GestureDetector(
+          child: Text(data, style: TextStyle(color: Colors.blue)),
+          onTap: () => Navigator.pushNamed(context, '/', arguments: data),
+        );
+        break;
+      case 'Seeders:':
+        return Text(data, style: TextStyle(color: Colors.green));
+        break;
+      case 'Leechers:':
+        return Text(data, style: TextStyle(color: Colors.red));
+        break;
+      case 'Completed:':
+        return Text(data, style: TextStyle(color: Colors.blue.shade800));
+        break;
+      default:
+        return Text(data);
+    }
+  }
+
   Color getTypeColor(NyaaItemType type) {
     switch (type) {
       case NyaaItemType.TRUSTED: return Color(0xFFdff0d8); // Bootstrap's success color
@@ -75,7 +100,7 @@ class NyaaTorrentCard extends StatelessWidget {
                         ),
                         child: Padding(
                           padding: EdgeInsets.fromLTRB(6, 6, 0, 6),
-                          child: Text(md[0], style: TextStyle(fontSize: 15))
+                          child: Text(md[0])
                         ),
                       ),
                       Expanded(
@@ -90,7 +115,7 @@ class NyaaTorrentCard extends StatelessWidget {
                           ),
                           child: Padding(
                             padding: EdgeInsets.fromLTRB(4, 6, 6, 6),
-                            child: Text(md[0]=='Date:' ? formatDate(md[1]) : md[1], style: TextStyle(fontSize: 15))
+                            child: formatMetaData(md[0], md[1], context)
                           ),
                         ),
                       )
