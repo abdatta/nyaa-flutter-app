@@ -1,14 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
+import 'package:nyaa_app/nyaa_item.dart';
 
 class NyaaComment {
   String user;
+  NyaaItemType userType; // Todo: Find all user types and create a separate class for NyaaUserType
   String avatar;
   String date;
   String body;
 
-  NyaaComment({this.user, this.avatar, this.date, this.body});
+  NyaaComment({this.user, this.userType, this.avatar, this.date, this.body});
 }
 
 class NyaaCommentsList extends StatelessWidget {
@@ -53,6 +56,16 @@ class NyaaCommentCard extends StatelessWidget {
     return '$date $time';
   }
 
+  Color getTypeColor(NyaaItemType type) {
+    switch (type) {
+      case NyaaItemType.TRUSTED: return Colors.green;
+      case NyaaItemType.REMAKE: return Colors.red;
+      case NyaaItemType.BATCH: return Colors.orange;
+      case NyaaItemType.NORMAL:
+      default: return Colors.blue;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -66,7 +79,11 @@ class NyaaCommentCard extends StatelessWidget {
             children: <Widget>[
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.network(this.comment.avatar)
+                child: CachedNetworkImage(
+                    imageUrl: comment.avatar,
+                    placeholder: (context, url) => SizedBox(child: Center(child: Icon(Icons.image, color: Colors.grey, size: 40)), width: 120, height: 120),
+                    errorWidget: (context, url, error) => SizedBox(child: Center(child: Icon(Icons.broken_image, color: Colors.grey, size: 40)), width: 120, height: 120),
+                ),
               ),
               Flexible(
                 child: Padding(
@@ -77,7 +94,10 @@ class NyaaCommentCard extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(this.comment.user, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                          GestureDetector(
+                            child: Text(this.comment.user, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: getTypeColor(this.comment.userType))),
+                            onTap: () => Navigator.pushNamed(context, '/', arguments: this.comment.user),
+                          ),
                           Text(formatDate(this.comment.date), style: TextStyle(fontWeight: FontWeight.w300))
                         ],
                       ),

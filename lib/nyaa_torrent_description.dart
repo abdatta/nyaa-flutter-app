@@ -16,7 +16,8 @@ class NyaaTorrentDescription extends StatelessWidget {
         trailing: Icon(Icons.keyboard_arrow_down),
         children: <Widget>[
           Container(
-            padding: EdgeInsets.all(10),
+            width: double.infinity,
+            padding: EdgeInsets.fromLTRB(15, 0, 15, 15),
             child: MarkdownBody(data: this.description, onTapLink: print),
           )
         ],

@@ -67,6 +67,7 @@ NyaaComment extractComment(Element elem) {
 
   return NyaaComment(
     user: userElement.text.trim(),
+    userType: getNyaaItemType(userElement.className.trim()),
     avatar: avatarElement.attributes['src'],
     date: dateElement.text.trim(),
     body: bodyElement.text.trim()
