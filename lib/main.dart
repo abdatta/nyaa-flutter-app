@@ -57,22 +57,25 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   Future<List<NyaaItem>> items;
   String query;
+  String user;
   bool loading = false;
   bool searching = false;
 
   /* Note: This function doesn't update the state though */
-  void update(String newQuery) {
+  void update(String newQuery, String user) {
     newQuery = newQuery.trim();
-    if (newQuery != this.query){
-      this.query = newQuery;
-      this.items = fetchItems(this.query);
-    }
+    if (newQuery == this.query && user == this.user) return;
+
+    this.query = newQuery;
+    this.user = user;
+    print("Searching for user: " + user);
+    this.items = fetchItems(this.query, this.user);
   }
 
   void refresh() {
     setState(() {
       this.loading = true;
-      this.items = fetchItems(this.query);
+      this.items = fetchItems(this.query, this.user);
       this.items.whenComplete(() {
         setState(() {
           this.loading = false;
@@ -81,15 +84,21 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void search(String query) {
-    this.searching = false;
-    if (query.trim() == this.query) return;
-    Navigator.pushNamed(context, '/', arguments: query);
+  void search(String query, String user) {
+    setState(() {
+      this.searching = false;
+    });
+    if (query.trim() == this.query && user == this.user)
+      return;
+
+    this.user = user;
+    Navigator.pushNamed(context, '/', arguments: HomePageArgs(query: query, user: user));
   }
 
   @override
   Widget build(BuildContext context) {
-    update(ModalRoute.of(context).settings.arguments ?? '');
+    HomePageArgs args = ModalRoute.of(context).settings.arguments ?? HomePageArgs();
+    update(args.query, args.user);
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -101,8 +110,8 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: this.searching ?
-          NyaaSearchBar(search: this.query, update: this.search) :
-          Text(widget.title + (this.query != '' ? ' :: ' + this.query : '')),
+          NyaaSearchBar(search: this.query, user: this.user, update: this.search) :
+          Text((this.user == '' ? widget.title : this.user) + (this.query != '' ? ' :: ' + this.query : '')),
         actions: <Widget>[
           IconButton(
             icon: Icon(this.searching ? Icons.clear : Icons.search),
@@ -130,4 +139,11 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+}
+
+class HomePageArgs {
+  final String query;
+  final String user;
+
+  HomePageArgs({this.query = '', this.user = ''});
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:nyaa_app/main.dart';
 import 'package:nyaa_app/nyaa_comment.dart';
 import 'package:nyaa_app/nyaa_item.dart';
 import 'package:nyaa_app/nyaa_torrent_files_list.dart';
@@ -36,7 +37,7 @@ class NyaaTorrentCard extends StatelessWidget {
       case 'Submitter:':
         return GestureDetector(
           child: Text(data, style: TextStyle(color: Colors.blue)),
-          onTap: () => Navigator.pushNamed(context, '/', arguments: data),
+          onTap: () => Navigator.pushNamed(context, '/', arguments: HomePageArgs(user: data)),
         );
         break;
       case 'Seeders:':

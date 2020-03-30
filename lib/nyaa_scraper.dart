@@ -48,10 +48,10 @@ List<NyaaItem> extractItems(String body) {
   return nyaaitems;
 }
 
-Future<List<NyaaItem>> fetchItems(String query) async {
-  String url = NYAA_URL;
+Future<List<NyaaItem>> fetchItems(String query, String user) async {
+  String url = NYAA_URL + (user == '' ? '/' : '/user/' + user);
   if (query.trim() != '') {
-    url += '/?f=0&c=0_0&q=' + Uri.encodeComponent(query);
+    url += '?f=0&c=0_0&q=' + Uri.encodeComponent(query);
   }
   print('Fetching: ' + url);
   Response response = await Client().get(url);
