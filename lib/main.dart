@@ -30,7 +30,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => MyHomePage(title: 'Nyaa'),
-        '/view': (context) => NyaaTorrentPage(link: ModalRoute.of(context).settings.arguments)
+        '/view': (context) =>
+            NyaaTorrentPage(link: ModalRoute.of(context).settings.arguments)
       },
     );
   }
@@ -55,7 +56,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Future<List<NyaaItem>> items;
+  Future<NyaaItemPageData> itemsPageData;
   String query;
   String user;
   bool loading = false;
@@ -69,14 +70,14 @@ class _MyHomePageState extends State<MyHomePage> {
     this.query = newQuery;
     this.user = user;
     print("Searching for user: " + user);
-    this.items = fetchItems(this.query, this.user);
+    this.itemsPageData = fetchItemsPage(this.query, this.user);
   }
 
   void refresh() {
     setState(() {
       this.loading = true;
-      this.items = fetchItems(this.query, this.user);
-      this.items.whenComplete(() {
+      this.itemsPageData = fetchItemsPage(this.query, this.user);
+      this.itemsPageData.whenComplete(() {
         setState(() {
           this.loading = false;
         });
@@ -88,16 +89,17 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       this.searching = false;
     });
-    if (query.trim() == this.query && user == this.user)
-      return;
+    if (query.trim() == this.query && user == this.user) return;
 
     this.user = user;
-    Navigator.pushNamed(context, '/', arguments: HomePageArgs(query: query, user: user));
+    Navigator.pushNamed(context, '/',
+        arguments: HomePageArgs(query: query, user: user));
   }
 
   @override
   Widget build(BuildContext context) {
-    HomePageArgs args = ModalRoute.of(context).settings.arguments ?? HomePageArgs();
+    HomePageArgs args =
+        ModalRoute.of(context).settings.arguments ?? HomePageArgs();
     update(args.query, args.user);
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
@@ -109,9 +111,11 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: this.searching ?
-          NyaaSearchBar(search: this.query, user: this.user, update: this.search) :
-          Text((this.user == '' ? widget.title : this.user) + (this.query != '' ? ' :: ' + this.query : '')),
+        title: this.searching
+            ? NyaaSearchBar(
+                search: this.query, user: this.user, update: this.search)
+            : Text((this.user == '' ? widget.title : this.user) +
+                (this.query != '' ? ' :: ' + this.query : '')),
         actions: <Widget>[
           IconButton(
             icon: Icon(this.searching ? Icons.clear : Icons.search),
@@ -127,8 +131,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: Center(
-        child: (this.loading) ? CircularProgressIndicator() : NyaaItemsList(items: this.items)
-      ),
+          child: (this.loading)
+              ? CircularProgressIndicator()
+              : NyaaItemsPage(data: this.itemsPageData)),
       drawer: NyaaDrawer(tiles: ['Upload', 'Info', 'RSS', 'Twitter', 'Fap']),
       floatingActionButton: FloatingActionButton(
         onPressed: refresh,
