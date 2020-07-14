@@ -1,12 +1,12 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:nyaa_app/main.dart';
-import 'package:nyaa_app/nyaa_item.dart';
-import 'package:nyaa_app/nyaa_scraper.dart';
+import 'package:nyaa_app/search/models/item.model.dart';
+import 'package:nyaa_app/search/models/search-args.model.dart';
+import 'package:nyaa_app/search/models/search-data.model.dart';
+import 'package:nyaa_app/search/widgets/item-card.widget.dart';
 
 class NyaaItemsPage extends StatefulWidget {
-  final Future<NyaaItemPageData> data;
+  final Future<SearchPageData> data;
 
   NyaaItemsPage({Key key, this.data}) : super(key: key);
 
@@ -17,10 +17,10 @@ class NyaaItemsPage extends StatefulWidget {
 class _NyaaItemsPageState extends State<NyaaItemsPage> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<NyaaItemPageData>(
+    return FutureBuilder<SearchPageData>(
       future: widget.data,
       builder: (context, snapshot) {
-        NyaaItemPageData data = snapshot.data;
+        SearchPageData data = snapshot.data;
         if (snapshot.hasData) {
           return Column(children: [
             if (data.alert != null)
@@ -34,7 +34,7 @@ class _NyaaItemsPageState extends State<NyaaItemsPage> {
                           children: [
                             GestureDetector(
                                 onTap: () => Navigator.pushNamed(context, '/',
-                                    arguments: HomePageArgs(user: data.alert)),
+                                    arguments: SearchArgs(user: data.alert)),
                                 child: Text(
                                     'See only results uploaded by ' +
                                         data.alert,
